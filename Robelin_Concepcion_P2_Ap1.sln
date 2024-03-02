@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robelin_Concepcion_P2_Ap1", "Robelin_Concepcion_P2_Ap1\Robelin_Concepcion_P2_Ap1.csproj", "{EE37B077-5146-4EF7-B210-95BBF0ED49AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robelin_Concepcion_P2_Ap1.Api", "Robelin_Concepcion_P2_Ap1.Api\Robelin_Concepcion_P2_Ap1.Api.csproj", "{A61E4B70-20CD-40F7-B7DB-8CD4382E02D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{EE37B077-5146-4EF7-B210-95BBF0ED49AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE37B077-5146-4EF7-B210-95BBF0ED49AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE37B077-5146-4EF7-B210-95BBF0ED49AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A61E4B70-20CD-40F7-B7DB-8CD4382E02D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A61E4B70-20CD-40F7-B7DB-8CD4382E02D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A61E4B70-20CD-40F7-B7DB-8CD4382E02D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A61E4B70-20CD-40F7-B7DB-8CD4382E02D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
