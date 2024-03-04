@@ -9,6 +9,6 @@ namespace Library.Models
 
         [Required(ErrorMessage ="Descripción Requerida")]
 
-        public string Descripción { get; set; }
+        public string? Descripción { get; set; }
     }
 }
