@@ -28,8 +28,8 @@
                         <td>@vehiculo.VehiculoId</td>
                         <td>@vehiculo.Fecha</td>
                         <td>@vehiculo.Descripción</td>
-                        <td>@vehiculo.Costo</td>
-                        <td>@vehiculo.Gastos</td>
+                        <td>@vehiculo.Costo.ToString("N2")</td>
+                        <td>@vehiculo.Gastos.ToString("N2")</td>
 
                         <td><a href="/Edit/@vehiculo.VehiculoId" class="bi bi-pencil-square"></a></td>
                         <td><a href="/Delete/@vehiculo.VehiculoId" class="bi bi-trash"></a></td>
