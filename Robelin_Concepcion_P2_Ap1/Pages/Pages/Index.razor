@@ -1,5 +1,56 @@
 ﻿@page "/Index"
+@inject HttpClient httpClient
+@inject IJSRuntime JSRuntime
+
+<div class="card">
+    <div class="card-header">
+        <h3>Detalles de Vehiculos</h3>
+        <a href="/Create" class="btn btn-outline-primary">Crear</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>VehiculoId</th>
+                    <th>Fecha</th>
+                    <th>Descripci&oacute;n</th>
+                    <th>Costo</th>
+                    <th>Gastos</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                    <th>Ver</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var vehiculo in ListaVehiculos)
+                {
+                    <tr>
+                        <td>@vehiculo.VehiculoId</td>
+                        <td>@vehiculo.Fecha</td>
+                        <td>@vehiculo.Descripción</td>
+                        <td>@vehiculo.Costo</td>
+                        <td>@vehiculo.Gastos</td>
+
+                        <td><a href="/Edit/@vehiculo.VehiculoId" class="bi bi-pencil-square"></a></td>
+                        <td><a href="/Delete/@vehiculo.VehiculoId" class="bi bi-trash"></a></td>
+                        <td><a href="/View/@vehiculo.VehiculoId" class="bi bi-eye"></a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 @code {
 
+[Parameter]
+    public int VehiculoId { get; set; }
+    public Vehiculos vehiculo { get; set; } = new Vehiculos();
+    public VehiculosDetalle vehiculoDetalle { get; set; } = new VehiculosDetalle();
+    public List<Vehiculos> ListaVehiculos { get; set; } = new List<Vehiculos>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaVehiculos = (await httpClient.GetFromJsonAsync<List<Vehiculos>>($"api/Vehiculos"))!;
+    }
 }
