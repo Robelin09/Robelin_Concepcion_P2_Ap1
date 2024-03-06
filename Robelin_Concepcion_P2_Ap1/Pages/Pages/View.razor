@@ -1,5 +1,82 @@
 ﻿@page "/View"
+@page "/View/{VehiculoId:int}"
+@inject NavigationManager Navigation
+@inject HttpClient httpClient
+@inject IJSRuntime JSRuntime
+
+<div class="card">
+    <div class="card-header bg-primary text-light">
+        <h1 class="mb-0">Detalles del Vehículo</h1>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Detalles del Vehículo</h5>
+        <dl class="row">
+            <dt class="col-sm-3">Vehículo ID:</dt>
+            <dd class="col-sm-9">@vehiculo.VehiculoId</dd>
+
+            <dt class="col-sm-3">Fecha:</dt>
+            <dd class="col-sm-9">@vehiculo.Fecha</dd>
+
+            <dt class="col-sm-3">Descripción:</dt>
+            <dd class="col-sm-9">@vehiculo.Descripción</dd>
+
+            <dt class="col-sm-3">Costo:</dt>
+            <dd class="col-sm-9">@vehiculo.Costo.ToString("N2")</dd>
+
+            <dt class="col-sm-3">Gastos:</dt>
+            <dd class="col-sm-9">@vehiculo.Gastos.ToString("N2")</dd>
+        </dl>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Vehículo ID</th>
+                        <th>Accesorio ID</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detalle in ListaVehiculoDetalle)
+                    {
+                        <tr>
+                            <td>@detalle.VehiculoId</td>
+                            <td>@detalle.AccesorioId</td>
+                            <td>@detalle.Valor.ToString("N2")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <button type="button" class="btn btn-outline-primary" @onclick="Atras">
+            <i class="bi bi-arrow-return-left"></i> Volver
+        </button>
+    </div>
+</div>
 
 @code {
+    [Parameter]
+    public int VehiculoId { get; set; }
+    public Vehiculos vehiculo { get; set; } = new Vehiculos();
+    public VehiculosDetalle vehiculoDetalle { get; set; } = new VehiculosDetalle();
+    public List<VehiculosDetalle> ListaVehiculoDetalle { get; set; } = new List<VehiculosDetalle>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (VehiculoId > 0)
+        {
+            var vehiculoEncontrado = await httpClient.GetFromJsonAsync<Vehiculos>($"api/Vehiculos/{VehiculoId}");
+            if (vehiculoEncontrado != null)
+            {
+                vehiculo = vehiculoEncontrado;
+                ListaVehiculoDetalle = vehiculo.vehiculosDetalle.ToList();
+            }
+        }
+    }
+    void Atras()
+    {
+        Navigation.NavigateTo("/Index");
+    }
 }
