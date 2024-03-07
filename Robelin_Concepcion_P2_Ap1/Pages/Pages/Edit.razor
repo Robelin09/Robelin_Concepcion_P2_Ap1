@@ -5,7 +5,7 @@
 @inject IJSRuntime JSRuntime
 
 
-<PageTitle>Editor de Vehiculos</PageTitle>
+<PageTitle>Editor de Vehículos</PageTitle>
 <EditForm Model="vehiculo" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
     <div class="card">
@@ -13,8 +13,7 @@
             <hi>Editor de Vehiculos</hi>
         </div>
         <div class=" card-body">
-            <label>VehiculoId</label>
-
+            <label>Veh&iacute;culoId:</label>
             <div class="input-group">
                 <InputNumber min="0" @bind-Value="vehiculo.VehiculoId" class="id-input"></InputNumber>
             </div>
@@ -45,6 +44,49 @@
             <button type="button" class="btn btn-outline-primary" @onclick="Atras">Volver <i class="bi bi-arrow-return-left" /></button>
             <button type="submit" class="btn btn-outline-success">Guardar <i class="bi bi-floppy-fill" /></button>
         </div>
+        <div class="card card-header mt-5">
+            <h3>Editar detalles del Vehículo</h3>
+
+            <div class="card-body">
+                <div>
+                    <label class="fw-bold mt-3">AccesorioId</label>
+                    <InputSelect @bind-Value="vehiculoDetalle.AccesorioId" class="form-select">
+                        @foreach (var accesorio in ListaAccesorios)
+                        {
+                            <option value="@accesorio.AccesorioId">@accesorio.AccesorioId</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => vehiculoDetalle.AccesorioId)" />
+                </div>
+                <div>
+                    <label class="fw-bold mt-3">Valor</label>
+                    <InputNumber @bind-Value="vehiculoDetalle.Valor" class="form-control"></InputNumber>
+                    <ValidationMessage For="@(() => vehiculoDetalle.Valor)" />
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-center">
+                <button type="button" @onclick="AgregarDetalle" class="btn btn-outline-success">Agregar</button>
+            </div>
+            <table class='table table-bordered table-hover'>
+                <thead>
+                    <tr>
+                        <th>AccesorioId</th>
+                        <th>Valor</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detalle in vehiculo.vehiculosDetalle)
+                    {
+                        <tr>
+                            <td>@detalle.AccesorioId</td>
+                            <td>@detalle.Valor</td>
+                            <td><button type="button" class="btn btn-outline-danger bi bi-trash-fill" @onclick=@(() => RemoverDetalle(detalle))></button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </EditForm>
 
@@ -55,7 +97,15 @@
     public int VehiculoId { get; set; }
     public Vehiculos vehiculo { get; set; } = new Vehiculos();
     public Accesorios accesorio { get; set; } = new Accesorios();
-   
+    public VehiculosDetalle vehiculoDetalle { get; set; } = new VehiculosDetalle();
+    public List<Accesorios> ListaAccesorios { get; set; } = new List<Accesorios>();
+    public bool vehiculoVacio;
+    public bool accesorioVacio;
+    public List<VehiculosDetalle> listaDetalles { get; set; } = new List<VehiculosDetalle>();
+
+
+    public int resultado { get; set; }
+    public string? mensaje { get; set; }
  
  
 
@@ -68,6 +118,8 @@
             await Buscar();
         }
         vehiculo.Fecha = DateTime.Now;
+        ListaAccesorios = await httpClient.GetFromJsonAsync<List<Accesorios>>("api/Accesorios");
+
     }
     private async Task<Vehiculos> BuscarVehiculo(int VehiculoId)
     {
@@ -110,7 +162,23 @@
         Navigation.NavigateTo("/Index");
     }
 
-   
+    public async Task AgregarDetalle()
+    {
+        if (vehiculo != null)
+        {
+
+            vehiculoDetalle.VehiculoId = vehiculo.VehiculoId;
+            listaDetalles.Add(vehiculoDetalle);
+            vehiculo.vehiculosDetalle.Add(vehiculoDetalle);
+            vehiculoDetalle = new VehiculosDetalle();
+        }
+    }
+
+    public async Task RemoverDetalle(VehiculosDetalle detalle)
+    {
+        vehiculoDetalle = detalle;
+        listaDetalles.Remove(detalle);
+    }
 
    
 }

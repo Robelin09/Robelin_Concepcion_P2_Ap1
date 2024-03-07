@@ -11,7 +11,7 @@
     <div class="card-body">
         <h5 class="card-title">Detalles del Vehículo</h5>
         <dl class="row">
-            <dt class="col-sm-3">Vehículo ID:</dt>
+            <dt class="col-sm-3">Veh&iacute;culoId:</dt>
             <dd class="col-sm-9">@vehiculo.VehiculoId</dd>
 
             <dt class="col-sm-3">Fecha:</dt>
@@ -30,16 +30,14 @@
             <table class="table table-bordered table-hover">
                 <thead class="thead-light">
                     <tr>
-                        <th>Vehículo ID</th>
                         <th>Accesorio ID</th>
                         <th>Valor</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var detalle in ListaVehiculoDetalle)
+                    @foreach (var detalle in vehiculo.vehiculosDetalle)
                     {
                         <tr>
-                            <td>@detalle.VehiculoId</td>
                             <td>@detalle.AccesorioId</td>
                             <td>@detalle.Valor.ToString("N2")</td>
                         </tr>

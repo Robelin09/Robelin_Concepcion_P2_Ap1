@@ -9,10 +9,10 @@
         <h1 class="mb-0">¿Desea Eliminar?</h1>
     </div>
     <div class="card-body">
-        <h5 class="card-title">Detalles del Vehiculo</h5>
+        <h5 class="card-title">Detalles del Vehículo</h5>
         <dl class="row">
 
-            <dt class="col-sm-3">VehiculoId:</dt>
+            <dt class="col-sm-3">Veh&iacute;culoId:</dt>
             <dd class="col-sm-9">@vehiculo.VehiculoId</dd>
 
             <dt class="col-sm-3">Fecha:</dt>
@@ -32,16 +32,14 @@
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>VehiculoId</th>
                     <th>AccesorioId</th>
                     <th>Valor</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var detalle in ListaVehiculoDetalle)
+                @foreach (var detalle in vehiculo.vehiculosDetalle)
                 {
                     <tr>
-                        <td>@detalle.VehiculoId</td>
                         <td>@detalle.AccesorioId</td>
                         <td>@detalle.Valor.ToString("N2")</td>
 
