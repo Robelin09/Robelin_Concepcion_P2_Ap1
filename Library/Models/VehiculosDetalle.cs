@@ -6,7 +6,6 @@ namespace Library.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
         public int VehiculoId { get; set; }
         [Required]
         public int AccesorioId { get; set; }
