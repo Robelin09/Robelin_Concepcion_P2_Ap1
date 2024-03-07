@@ -32,7 +32,9 @@ namespace Robelin_Concepcion_P2_Ap1.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Vehiculos>> GetVehiculos(int id)
         {
-            var vehiculos = await _context.Vehiculos.FindAsync(id);
+            var vehiculos = await _context.Vehiculos
+               .Include(v => v.vehiculosDetalle)
+               .FirstOrDefaultAsync(v => v.VehiculoId == id);
 
             if (vehiculos == null)
             {
