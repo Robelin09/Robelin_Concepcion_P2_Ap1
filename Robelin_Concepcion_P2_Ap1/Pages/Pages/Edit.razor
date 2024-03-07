@@ -107,9 +107,6 @@
     public int resultado { get; set; }
     public string? mensaje { get; set; }
  
- 
-
-
     protected override async Task OnInitializedAsync()
     {
         if (VehiculoId > 0)
@@ -145,8 +142,6 @@
         }
 
     }
-
-
     public async Task Guardar()
     {
         var response = await httpClient.PostAsJsonAsync($"api/Vehiculos", vehiculo);
@@ -179,6 +174,4 @@
         vehiculoDetalle = detalle;
         listaDetalles.Remove(detalle);
     }
-
-   
 }
