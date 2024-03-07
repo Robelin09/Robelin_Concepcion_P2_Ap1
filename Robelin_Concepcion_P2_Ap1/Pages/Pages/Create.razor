@@ -4,16 +4,15 @@
 @inject IJSRuntime JSRuntime
 
 
-<PageTitle>Registro de Vehiculos</PageTitle>
+<PageTitle>Registro de Vehículos</PageTitle>
 <EditForm Model="vehiculo" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
     <div class="card">
         <div class="card-header">
-            <hi>Registro de Vehiculos</hi>
+            <hi>Registro de Vehículos</hi>
         </div>
         <div class=" card-body">
-            <label>VehiculoId</label>
-            
+            <label>Veh&iacute;culoId:</label>
             <div class="input-group">
                 <InputNumber min="0" @bind-Value="vehiculo.VehiculoId" class="id-input"></InputNumber>
             </div>
@@ -38,7 +37,7 @@
                 <InputNumber @bind-Value="vehiculo.Gastos" class="form-control"></InputNumber>
                 <ValidationMessage For="@(() => vehiculo.Gastos)" />
             </div>
-            
+
         </div>
         <div class="card-footer">
             <button type="button" class="btn btn-outline-primary" @onclick="Atras">Volver <i class="bi bi-arrow-return-left" /></button>
@@ -46,21 +45,30 @@
         </div>
 
         <div class="card card-header mt-5">
-            <h3>Detalle del Vehiculo</h3>
-            <div>
-                <label class="fw-bold mt-3"> VehiculoId</label>
-                <InputNumber @bind-Value="vehiculoDetalle.VehiculoId" class="form-control"></InputNumber>
-                <ValidationMessage For="@(() => vehiculoDetalle.VehiculoId)" />
-            </div>
-            <div>
-                <label class="fw-bold mt-3"> AccesorioId</label>
-                <InputNumber @bind-Value="vehiculoDetalle.AccesorioId" class="form-control"></InputNumber>
-                <ValidationMessage For="@(() => vehiculoDetalle.AccesorioId)" />
-            </div>
-            <div>
-                <label class="fw-bold mt-3">Valor</label>
-                <InputNumber @bind-Value="vehiculoDetalle.Valor" class="form-control"></InputNumber>
-                <ValidationMessage For="@(() => vehiculoDetalle.Valor)" />
+            <h3>Detalles del Vehículo</h3>
+
+            <div class="card-body">
+
+                <p>    1: Camara Trasera  </p>
+                <p>2: Pantalla Interior  </p>
+                <p> 3: Interior en Piel  </p>
+                <p>   4: Sun Roof  </p>
+                <p> 5: Aros de Lujo  </p>
+                <div>
+                    <label class="fw-bold mt-3">AccesorioId</label>
+                    <InputSelect @bind-Value="vehiculoDetalle.AccesorioId" class="form-select">
+                        @foreach (var accesorio in ListaAccesorios)
+                        {
+                            <option value="@accesorio.AccesorioId">@accesorio.AccesorioId</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => vehiculoDetalle.AccesorioId)" />
+                </div>
+                <div>
+                    <label class="fw-bold mt-3">Valor</label>
+                    <InputNumber @bind-Value="vehiculoDetalle.Valor" class="form-control"></InputNumber>
+                    <ValidationMessage For="@(() => vehiculoDetalle.Valor)" />
+                </div>
             </div>
             <div class="card-footer d-flex justify-content-center">
                 <button type="button" @onclick="AgregarDetalle" class="btn btn-outline-success">Agregar</button>
@@ -68,18 +76,15 @@
             <table class='table table-bordered table-hover'>
                 <thead>
                     <tr>
-                        <th>VehiculoId</th>
                         <th>AccesorioId</th>
                         <th>Valor</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var detalle in listaDetalles)
+                    @foreach (var detalle in vehiculo.vehiculosDetalle)
                     {
-                        var vehiculoEncontrado = BuscarVehiculo(detalle.VehiculoId);
                         <tr>
-                            <td>@detalle.VehiculoId</td>
                             <td>@detalle.AccesorioId</td>
                             <td>@detalle.Valor</td>
                             <td><button type="button" class="btn btn-outline-danger bi bi-trash-fill" @onclick=@(() => RemoverDetalle(detalle))></button></td>
@@ -116,6 +121,7 @@
             await Buscar();
         }
         vehiculo.Fecha = DateTime.Now;
+        ListaAccesorios = await httpClient.GetFromJsonAsync<List<Accesorios>>("api/Accesorios");
     }
     private async Task<Vehiculos> BuscarVehiculo(int VehiculoId)
     {
