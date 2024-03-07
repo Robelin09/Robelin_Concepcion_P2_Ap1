@@ -4,53 +4,118 @@
 
 <div class="card">
     <div class="card-header">
-        <h3>Detalles de Vehiculos</h3>
+        <h3>Detalles de Vehículos</h3>
         <a href="/Create" class="btn btn-outline-primary">Crear</a>
     </div>
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>VehiculoId</th>
-                    <th>Fecha</th>
-                    <th>Descripci&oacute;n</th>
-                    <th>Costo</th>
-                    <th>Gastos</th>
-                    <th>Editar</th>
-                    <th>Eliminar</th>
-                    <th>Ver</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var vehiculo in ListaVehiculos)
-                {
-                    <tr>
-                        <td>@vehiculo.VehiculoId</td>
-                        <td>@vehiculo.Fecha</td>
-                        <td>@vehiculo.Descripción</td>
-                        <td>@vehiculo.Costo.ToString("N2")</td>
-                        <td>@vehiculo.Gastos.ToString("N2")</td>
+    <div class="card-body">
 
-                        <td><a href="/Edit/@vehiculo.VehiculoId" class="bi bi-pencil-square"></a></td>
-                        <td><a href="/Delete/@vehiculo.VehiculoId" class="bi bi-trash"></a></td>
-                        <td><a href="/View/@vehiculo.VehiculoId" class="bi bi-eye"></a></td>
+        <div class="input-group-text">
+
+            <label class="form-control-label col-1">Desde:</label>
+            <div class="col-3">
+                <input class="form-control" type="date" @bind="Desde" />
+            </div>
+
+            <label class="form-control-label col-1">Hasta:</label>
+            <div class="col-3">
+                <input class="form-control" type="date" @bind="Hasta" />
+            </div>
+
+            <div class="col-5">
+                <button type="button" @onclick="Buscar" class="btn btn-primary  ">
+                    <i class="bi bi-search" />
+                    <br /> Buscar
+                </button>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-3">
+                <label>Filtrar Por:</label>
+                <InputSelect @bind-Value="Opcion" class="form-select">
+                    <option value="0" selected disabled>Seleccione</option>
+                    <option value="1">VehiculoId</option>
+                </InputSelect>
+            </div>
+
+            @if (Opcion == 1)
+            {
+                <div class="col-3">
+                    <label>Id</label>
+                    <div class="input-group">
+                        <InputNumber @bind-Value="vehiculo.VehiculoId" class="form-control"></InputNumber>
+                    </div>
+                </div>
+            }
+        </div>
+        <br />
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Veh&iacute;culoId</th>
+                        <th>Fecha</th>
+                        <th>Descripci&oacute;n</th>
+                        <th>Costo</th>
+                        <th>Gastos</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                        <th>Ver</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var vehiculo in listaVehiculos)
+                    {
+                        <tr>
+                            <td>@vehiculo.VehiculoId</td>
+                            <td>@vehiculo.Fecha</td>
+                            <td>@vehiculo.Descripción</td>
+                            <td>@vehiculo.Costo.ToString("N2")</td>
+                            <td>@vehiculo.Gastos.ToString("N2")</td>
+
+                            <td><a href="/Edit/@vehiculo.VehiculoId" class="bi bi-pencil-square"></a></td>
+                            <td><a href="/Delete/@vehiculo.VehiculoId" class="bi bi-trash"></a></td>
+                            <td><a href="/View/@vehiculo.VehiculoId" class="bi bi-eye"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 @code {
 
-[Parameter]
+    [Parameter]
     public int VehiculoId { get; set; }
     public Vehiculos vehiculo { get; set; } = new Vehiculos();
     public VehiculosDetalle vehiculoDetalle { get; set; } = new VehiculosDetalle();
-    public List<Vehiculos> ListaVehiculos { get; set; } = new List<Vehiculos>();
+    public List<Vehiculos> listaVehiculos { get; set; } = new List<Vehiculos>();
+    public int Opcion { get; set; }
+
+    public DateTime Desde { get; set; }
+    public DateTime Hasta { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ListaVehiculos = (await httpClient.GetFromJsonAsync<List<Vehiculos>>($"api/Vehiculos"))!;
+        Desde = DateTime.Now.AddMonths(-1);
+        Hasta = DateTime.Now;
+        await Buscar();
+        listaVehiculos = (await httpClient.GetFromJsonAsync<List<Vehiculos>>($"api/Vehiculos"))!;
+    }
+    public async Task Buscar()
+    {
+        Hasta = new DateTime(Hasta.Year, Hasta.Month, Hasta.Day, 23, 59, 59);
+        if (Opcion == 1 && vehiculo.VehiculoId > 0)
+        {
+            listaVehiculos = (await httpClient.GetFromJsonAsync<List<Vehiculos>>($"api/Vehiculos"))!.Where(v => v.VehiculoId == vehiculo.VehiculoId && v.Fecha >= Desde && v.Fecha <= Hasta).ToList();
+            StateHasChanged();
+        }
+        else
+        {
+            listaVehiculos = (await httpClient.GetFromJsonAsync<List<Vehiculos>>($"api/Vehiculos"))!.Where(v => v.Fecha >= Desde && v.Fecha <= Hasta).ToList();
+            StateHasChanged();
+        }
     }
 }
